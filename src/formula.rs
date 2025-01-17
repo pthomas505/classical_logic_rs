@@ -26,8 +26,8 @@ impl std::fmt::Display for Formula {
       Formula::Or(phi, psi) => write!(f, "({} \\/ {})", *phi, *psi),
       Formula::Imp(phi, psi) => write!(f, "({} -> {})", *phi, *psi),
       Formula::Iff(phi, psi) => write!(f, "({} <-> {})", *phi, *psi),
-      Formula::Forall(x, phi) => write!(f, "A {}. {}", x, *phi),
-      Formula::Exists(x, phi) => write!(f, "E {}. {}", x, *phi),
+      Formula::Forall(x, phi) => write!(f, "(A. {} {})", x, *phi),
+      Formula::Exists(x, phi) => write!(f, "(E. {} {})", x, *phi),
     }
   }
 }
