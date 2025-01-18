@@ -1,7 +1,14 @@
+use lalrpop_util::lalrpop_mod;
+
+
+pub mod formula;
+
+
+lalrpop_util::lalrpop_mod!(grammar);
 
 
 fn main() {
-  let f = classical_logic_rs::formula::Formula::Atom("P".to_string());
+  let f = grammar::FormulaParser::new().parse(r"((((~(E. x ~P) /\ T.) \/ F.) -> Q) <-> R)");
 
-  println!("{}", f);
+  println!("{:?}", f);
 }

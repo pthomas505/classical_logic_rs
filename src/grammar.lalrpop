@@ -1,0 +1,21 @@
+use crate::formula::Formula;
+
+grammar;
+
+
+pub Formula: Formula = {
+  "F." => Formula::False,
+  "T." => Formula::True,
+  <x:Ident> => Formula::Atom(x),
+  "~" <phi:Formula> => Formula::Not(Box::new(phi)),
+  "(" <phi:Formula> "/\\" <psi:Formula> ")" => Formula::And(Box::new(phi), Box::new(psi)),
+  "(" <phi:Formula> "\\/" <psi:Formula> ")" => Formula::Or(Box::new(phi), Box::new(psi)),
+  "(" <phi:Formula> "->" <psi:Formula> ")" => Formula::Imp(Box::new(phi), Box::new(psi)),
+  "(" <phi:Formula> "<->" <psi:Formula> ")" => Formula::Iff(Box::new(phi), Box::new(psi)),
+  "(" "A." <x:Ident> <phi:Formula> ")" => Formula::Forall(x, Box::new(phi)),
+  "(" "E." <x:Ident> <phi:Formula> ")" => Formula::Exists(x, Box::new(phi)),
+};
+
+Ident: String = {
+  <s:r"[a-zA-Z_']+"> => s.to_string(),
+};
