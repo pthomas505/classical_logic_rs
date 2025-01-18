@@ -1,10 +1,7 @@
 use lalrpop_util::lalrpop_mod;
 
 
-pub mod formula;
-
-
-lalrpop_util::lalrpop_mod!(grammar);
+lalrpop_mod!(grammar);
 
 
 fn main() {

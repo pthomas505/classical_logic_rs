@@ -1,4 +1,4 @@
-use crate::formula::Formula;
+use classical_logic_rs::formula::Formula;
 
 grammar;
 
