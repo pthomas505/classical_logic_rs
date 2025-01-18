@@ -33,6 +33,41 @@ impl std::fmt::Display for Formula {
 }
 
 
+impl Formula {
+  #[allow(non_snake_case)]
+  pub fn atom_vec(&self) -> Vec<String> {
+    match self {
+      Formula::False => vec![],
+      Formula::True => vec![],
+      Formula::Atom(X) => vec![X.to_string()],
+      Formula::Not(phi) => phi.atom_vec(),
+      Formula::And(phi, psi) => {
+        let mut xs = phi.atom_vec();
+        xs.append(&mut psi.atom_vec());
+        xs
+      }
+      Formula::Or(phi, psi) => {
+        let mut xs = phi.atom_vec();
+        xs.append(&mut psi.atom_vec());
+        xs
+      }
+      Formula::Imp(phi, psi) => {
+        let mut xs = phi.atom_vec();
+        xs.append(&mut psi.atom_vec());
+        xs
+      }
+      Formula::Iff(phi, psi) => {
+        let mut xs = phi.atom_vec();
+        xs.append(&mut psi.atom_vec());
+        xs
+      }
+      Formula::Forall(_, phi) => phi.atom_vec(),
+      Formula::Exists(_, phi) => phi.atom_vec(),
+    }
+  }
+}
+
+
 #[allow(non_snake_case)]
 pub fn eval(F: &Formula, V: &dyn Fn(&String) -> bool) -> bool {
   match F {
