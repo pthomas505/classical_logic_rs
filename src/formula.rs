@@ -69,17 +69,34 @@ impl Formula {
 
 
 #[allow(non_snake_case)]
-pub fn eval(F: &Formula, V: &dyn Fn(&String) -> bool) -> bool {
+pub fn eval(F: &Formula, V: &std::collections::HashMap<String, bool>) -> Option<bool>
+{
   match F {
-    Formula::False => false,
-    Formula::True => true,
-    Formula::Atom(X) => V(X),
-    Formula::Not(phi) => ! eval(phi, V),
-    Formula::And(phi, psi) => eval(phi, V) && eval(psi, V),
-    Formula::Or(phi, psi) => eval(phi, V) || eval(psi, V),
-    Formula::Imp(phi, psi) => (! eval(phi, V)) || eval(psi, V),
-    Formula::Iff(phi, psi) => eval(phi, V) == eval(psi, V),
-    Formula::Forall(_, phi) => eval(phi, V),
-    Formula::Exists(_, phi) => eval(phi, V)
+    Formula::False => Some(false),
+    Formula::True => Some(true),
+    Formula::Atom(X) => V.get(X).copied(),
+    Formula::Not(phi) => eval(phi, V).map(|val_phi| !val_phi),
+    Formula::And(phi, psi) =>
+      match eval(phi, V) {
+        Some(val_phi) => eval(psi, V).map(|val_psi| val_phi && val_psi),
+        None => None
+      }
+    Formula::Or(phi, psi) =>
+      match eval(phi, V) {
+        Some(val_phi) => eval(psi, V).map(|val_psi| val_phi || val_psi),
+        None => None
+      }
+    Formula::Imp(phi, psi) =>
+      match eval(phi, V) {
+        Some(val_phi) => eval(psi, V).map(|val_psi| !val_phi || val_psi),
+        None => None
+      }
+    Formula::Iff(phi, psi) =>
+      match eval(phi, V) {
+        Some(val_phi) => eval(psi, V).map(|val_psi| val_phi == val_psi),
+        None => None
+      }
+    Formula::Forall(_, _) => None,
+    Formula::Exists(_, _) => None,
   }
 }
